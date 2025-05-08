@@ -1,5 +1,19 @@
 <?php
 
+foreach(apache_request_headers() as $header => $key) {
+    if (preg_match("/^SIMPLE_CAPTCHA_KEY/i", $header)) {
+        $keyList=file("/var/www/keys");
+        $keyList=array_map("trim",$keyList);
+        $keyList=array_map("strtolower",$keyList);
+        $keyList=array_filter($keyList);
+        $key=strtolower(trim($key));
+        if(in_array($key,$keyList)){
+            exit();
+        }
+    }
+}
+
+
 define("CAPTCHA_LENGTH", 6);
 define("CAPTCHA_ALLOWED_CHARS", 'CDEFHKMNPQRTWXY379');
 ob_start();
